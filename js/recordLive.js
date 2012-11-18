@@ -1,13 +1,14 @@
 var audio_context,
     recorder,
-    volume;
+    volume,
+    volumeLevel = 0;
 
 function startUserMedia(stream) {
   var input = audio_context.createMediaStreamSource(stream);
   console.log('Media stream created.');
 
   volume = audio_context.createGainNode();
-  volume.gain.value = 0.8;
+  volume.gain.value = volumeLevel;
   input.connect(volume);
   volume.connect(audio_context.destination);
   console.log('Input connected to audio context destination.');
@@ -18,6 +19,7 @@ function startUserMedia(stream) {
 
 function changeVolume(value) {
   if (!volume) return;
+  volumeLevel = value;
   volume.gain.value = value;
 }
 
@@ -45,6 +47,7 @@ function createDownloadLink() {
     var url = URL.createObjectURL(blob);
     var tableRef = document.getElementById('recordingslist');
     var newRow   = tableRef.insertRow(-1);
+    newRow.className = 'soundBite';
     var audioElement = document.createElement('audio');
     var downloadAnchor = document.createElement('a');
     var editButton = document.createElement('button');
@@ -81,6 +84,14 @@ function createDownloadLink() {
     newCell.appendChild(downloadAnchor);
     newCell = newRow.insertCell(-1);
     newCell.appendChild(editButton);
+
+    newCell = newRow.insertCell(-1);
+    var toggler;
+    for (var i = 0, l = 8; i < l; i++) {
+      toggler = document.createElement('input');
+      $(toggler).attr('type', 'checkbox');
+      newCell.appendChild(toggler);
+    }
   });
 }
 

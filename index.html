@@ -14,6 +14,9 @@
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
+      .soundBite input {
+        margin-right: 4px;
+      }
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -35,25 +38,50 @@
     </div>
     <div class="recorder container">
       <p>Make sure you are using a recent version of Google Chrome, at the moment this only works with Google Chrome Canary.</p>
-      <p>Also before you enable microphone input either plug in headphones or turn the volume down if you want to avoid ear splitting feedback!</p>
+      <p>Also before you enable microphone input either plug in headphones or turn the volume down if you want to avoid ear splitting feedback, especially while playing back already recorded sounds!</p>
 
-      <p>Record monitor volume: <input type="range" max="1" step="0.1" value="0.8" onchange="changeVolume(this.value)"/></p>
+      <p>Record monitor volume: <input type="range" max="1" step="0.1" value="0" onchange="changeVolume(this.value)"/></p>
       <p>
         <button class="btn btn-primary" onclick="startRecording(this);">Record</button>
         <button class="btn btn-warning" onclick="stopRecording(this);" disabled>Stop</button>
       </p>
       
-      <h2>Recordings</h2>
+      <h2>Sounds</h2>
+      <p>
+        Sequencer
+        <button class="btn btn-primary" onclick="startSequencer(this);">Play</button>
+        <button class="btn btn-warning" onclick="stopSequencer(this);" disabled>Stop</button>
+      </p>
       <table id="recordingslist">
         <tr>
           <th>Listen</th>
           <th>Save</th>
           <th>Edit</th>
+          <th id="sequencerBoxes">
+            <p>Sequence</p>
+            <input type="checkbox"/>
+            <input type="checkbox"/>
+            <input type="checkbox"/>
+            <input type="checkbox"/>
+            <input type="checkbox"/>
+            <input type="checkbox"/>
+            <input type="checkbox"/>
+            <input type="checkbox"/>
+          </th>
         </tr>
+        <!-- <tr>
+          <th>Drone</th>
+          <th></th>
+          <th></th>
+          <th>
+            <input type="checkbox" id="droneToggle"/>
+          </th>
+        </tr> -->
       </table>
 
       <script src="js/lib/recorder.js"></script>
       <script src="js/recordLive.js"></script>
+      <script src="js/sequencer.js"></script>
     </div>
     <div class="editor container">
       <div class="row">
@@ -107,8 +135,8 @@
                 <a id="btn_loop" class="btn btn-warning btn-large" data-toggle="button" onclick="$('#audioLayerControl')[0].toggleLoop();"><i class="icon-repeat icon-white"></i></a>
               </div>
               <div class="btn-group">
-                <a class="btn btn-large btn-primary" onclick="$('#audioLayerControl')[0].save($('#savelink')[0]);"><i class="icon-fire"></i> Render</a>
-                <a class="btn btn-large btn-success disabled" id="savelink" download="export.wav"><i class="icon-download"></i> Save</a>
+                <!-- <a class="btn btn-large btn-primary" onclick="$('#audioLayerControl')[0].save($('#savelink')[0]);"><i class="icon-fire"></i> Render</a> -->
+                <button class="btn btn-large btn-success" id="savelink" onclick="$('#audioLayerControl')[0].saveBack();"><i class="icon-download"></i> Save</button>
               </div>
             </div>
           </center>
