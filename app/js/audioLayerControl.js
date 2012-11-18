@@ -376,7 +376,13 @@ function audioLayerControl(elementContext)
 
     this.saveBack = function saveBack()
     {
-        
+        // this.toWave().toBlobUrlAsync('audio/wav', function(url, host, e) {
+        //     console.warn(url, host, e);
+        // });
+        handleWAV(new Blob([this.toWave().encodeWaveFile()], {type: 'audio/wav'}));
+
+        $('.recorder.container').removeClass('hide');
+        $('.editor.container').addClass('invisible');
     };
     
     this.testFilter = function testFilter()

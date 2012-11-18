@@ -29,18 +29,19 @@ function WaveTrack()
         
         var encodedWave = this.encodeWaveFile();
         
-        var bb = new BlobBuilder();
-        var blob;
-        bb.append(encodedWave.buffer);
-        blob = bb.getBlob(encoding);
-        
+        // var bb = new BlobBuilder();
+        // var blob;
+        // bb.append(encodedWave.buffer);
+        // blob = bb.getBlob(encoding);
+        blob = new Blob([encodedWave.buffer], {type: encoding});
+
         if (asyncMethod !== undefined)
         {
             var fileReader = new FileReader();
             fileReader.onloadend = function(e)
             {
                 //debugger;
-                asyncMethod(fileReader.result, host); 
+                asyncMethod(fileReader.result, host, e);
             };
             fileReader.readAsDataURL(blob);
         }

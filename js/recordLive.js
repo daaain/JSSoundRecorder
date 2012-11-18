@@ -1,7 +1,8 @@
 var audio_context,
     recorder,
     volume,
-    volumeLevel = 0;
+    volumeLevel = 0,
+    currentEditedSoundIndex;
 
 function startUserMedia(stream) {
   var input = audio_context.createMediaStreamSource(stream);
@@ -43,56 +44,65 @@ function stopRecording(button) {
 }
 
 function createDownloadLink() {
-  recorder && recorder.exportWAV(function(blob) {
-    var url = URL.createObjectURL(blob);
-    var tableRef = document.getElementById('recordingslist');
-    var newRow   = tableRef.insertRow(-1);
-    newRow.className = 'soundBite';
-    var audioElement = document.createElement('audio');
-    var downloadAnchor = document.createElement('a');
-    var editButton = document.createElement('button');
+  currentEditedSoundIndex = -1;
+  recorder && recorder.exportWAV(handleWAV.bind(this));
+}
+
+function handleWAV(blob) {
+  var tableRef = document.getElementById('recordingslist');
+  if (currentEditedSoundIndex !== -1) {
+    $('#recordingslist tr:nth-child(' + (currentEditedSoundIndex + 1) + ')').remove();
+  }
+
+  var url = URL.createObjectURL(blob);
+  var newRow   = tableRef.insertRow(currentEditedSoundIndex);
+  newRow.className = 'soundBite';
+  var audioElement = document.createElement('audio');
+  var downloadAnchor = document.createElement('a');
+  var editButton = document.createElement('button');
+  
+  audioElement.controls = true;
+  audioElement.src = url;
+
+  downloadAnchor.href = url;
+  downloadAnchor.download = new Date().toISOString() + '.wav';
+  downloadAnchor.innerHTML = 'Download';
+  downloadAnchor.className = 'btn btn-primary';
+
+  editButton.onclick = function(e) {
+    $('.recorder.container').addClass('hide');
+    $('.editor.container').removeClass('invisible');
+
+    currentEditedSoundIndex = $(e.target).closest('tr').index();
     
-    audioElement.controls = true;
-    audioElement.src = url;
-
-    downloadAnchor.href = url;
-    downloadAnchor.download = new Date().toISOString() + '.wav';
-    downloadAnchor.innerHTML = 'Download';
-    downloadAnchor.className = 'btn btn-primary';
-
-    editButton.onclick = function() {
-      $('.recorder.container').addClass('hide');
-      $('.editor.container').removeClass('invisible');
-
-      var f = new FileReader();
-      f.onload = function(e) {
-          audio_context.decodeAudioData(e.target.result, function(buffer) {
-            console.warn(buffer);
-            $('#audioLayerControl')[0].handleAudio(buffer);
-          }, function(e) {
-            console.warn(e);
-          });
-      };
-      f.readAsArrayBuffer(blob);
+    var f = new FileReader();
+    f.onload = function(e) {
+        audio_context.decodeAudioData(e.target.result, function(buffer) {
+          console.warn(buffer);
+          $('#audioLayerControl')[0].handleAudio(buffer);
+        }, function(e) {
+          console.warn(e);
+        });
     };
-    editButton.innerHTML = 'Edit';
-    editButton.className = 'btn btn-primary';
+    f.readAsArrayBuffer(blob);
+  };
+  editButton.innerHTML = 'Edit';
+  editButton.className = 'btn btn-primary';
 
-    var newCell = newRow.insertCell(-1);
-    newCell.appendChild(audioElement);
-    newCell = newRow.insertCell(-1);
-    newCell.appendChild(downloadAnchor);
-    newCell = newRow.insertCell(-1);
-    newCell.appendChild(editButton);
+  var newCell = newRow.insertCell(-1);
+  newCell.appendChild(audioElement);
+  newCell = newRow.insertCell(-1);
+  newCell.appendChild(downloadAnchor);
+  newCell = newRow.insertCell(-1);
+  newCell.appendChild(editButton);
 
-    newCell = newRow.insertCell(-1);
-    var toggler;
-    for (var i = 0, l = 8; i < l; i++) {
-      toggler = document.createElement('input');
-      $(toggler).attr('type', 'checkbox');
-      newCell.appendChild(toggler);
-    }
-  });
+  newCell = newRow.insertCell(-1);
+  var toggler;
+  for (var i = 0, l = 8; i < l; i++) {
+    toggler = document.createElement('input');
+    $(toggler).attr('type', 'checkbox');
+    newCell.appendChild(toggler);
+  }
 }
 
 window.onload = function init() {
