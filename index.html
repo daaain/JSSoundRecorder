@@ -29,22 +29,28 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#">HTML5 Audio Editor</a>
+          <a class="brand" href="#">HTML5 audio live recoder and editor</a>
         </div>
       </div>
     </div>
     <div class="recorder container">
-      <h1>Recorder.js simple WAV export example</h1>
-
       <p>Make sure you are using a recent version of Google Chrome, at the moment this only works with Google Chrome Canary.</p>
       <p>Also before you enable microphone input either plug in headphones or turn the volume down if you want to avoid ear splitting feedback!</p>
 
-      Volume: <input type="range" max="1" step="0.1" value="0.8" onchange="changeVolume(this.value)"/>
-      <button onclick="startRecording(this);">record</button>
-      <button onclick="stopRecording(this);" disabled>stop</button>
+      <p>Record monitor volume: <input type="range" max="1" step="0.1" value="0.8" onchange="changeVolume(this.value)"/></p>
+      <p>
+        <button class="btn btn-primary" onclick="startRecording(this);">Record</button>
+        <button class="btn btn-warning" onclick="stopRecording(this);" disabled>Stop</button>
+      </p>
       
       <h2>Recordings</h2>
-      <ul id="recordingslist"></ul>
+      <table id="recordingslist">
+        <tr>
+          <th>Listen</th>
+          <th>Save</th>
+          <th>Edit</th>
+        </tr>
+      </table>
 
       <script src="js/lib/recorder.js"></script>
       <script src="js/recordLive.js"></script>
