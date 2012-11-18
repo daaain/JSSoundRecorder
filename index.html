@@ -32,12 +32,14 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#">HTML5 audio live recoder and editor</a>
+          <a class="brand" href="#">Sound collector + music maker</a>
         </div>
       </div>
     </div>
     <div class="recorder container">
-      <p>Make sure you are using a recent version of Google Chrome, at the moment this only works with Google Chrome Canary.</p>
+      <p>Make sure you are using a recent version of Google Chrome, at the moment this only works with Google Chrome Canary. You also need to enable Web Audio Input under about:flags.</p>
+      <p>There are no servers involved, only Web Audio API and WAVs are passed around as binary Blobs.</p>
+      <p>Make sure you try editing a sound, there's a fairly full featured editor tied in (thanks plucked/html5-audio-editor).</p>
       <p>Also before you enable microphone input either plug in headphones or turn the volume down if you want to avoid ear splitting feedback, especially while playing back already recorded sounds!</p>
 
       <p>Record monitor volume: <input type="range" max="1" step="0.1" value="0" onchange="changeVolume(this.value)"/></p>
