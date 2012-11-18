@@ -40,6 +40,7 @@ function startSequencer(button) {
   console.log('Playing...');
 
   volume.gain.value = 0;
+  dronegain.gain.value = 10.0;
   Sequencer._reset();
   Sequencer._play();
 }
@@ -51,4 +52,5 @@ function stopSequencer(button) {
 
   Sequencer._stop();
   volume.gain.value = volumeLevel;
+  dronegain.gain.value = 0;
 }

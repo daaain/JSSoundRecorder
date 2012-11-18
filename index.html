@@ -69,19 +69,21 @@
             <input type="checkbox"/>
           </th>
         </tr>
-        <!-- <tr>
+        <tr>
           <th>Drone</th>
-          <th></th>
-          <th></th>
           <th>
-            <input type="checkbox" id="droneToggle"/>
+            <label for='BaseNote'>Base Note: <span class='controlVal'></span></label>
+            <input class='control' id='BaseNote' type='range' min='40' max='100' value='63'>
           </th>
-        </tr> -->
+          <th>
+            <label for='NumOsc'>Number of Generators: <span class='controlVal'></span></label>
+            <input class='control' id='NumOsc' type='range' min='1' max='40' value='40'>
+          </th>
+          <th>
+            <!-- <input type="checkbox" id="droneToggle" checked/> -->
+          </th>
+        </tr>
       </table>
-
-      <script src="js/lib/recorder.js"></script>
-      <script src="js/recordLive.js"></script>
-      <script src="js/sequencer.js"></script>
     </div>
     <div class="editor container">
       <div class="row">
@@ -278,6 +280,11 @@
     <script type="text/javascript" src="app/js/binarytoolkit.js"></script>
     <script type="text/javascript" src="app/js/filesystemutility.js"></script>
     <script type="text/javascript" src="app/js/editorapp.js"></script>
+
+    <script src="js/lib/recorder.js"></script>
+    <script src="js/recordLive.js"></script>
+    <script src="js/sequencer.js"></script>
+    <script src="js/drone.js"></script>
 
     <script type="text/javascript">
       $(window).load(function()
