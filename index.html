@@ -39,6 +39,7 @@
       <p>Make sure you are using a recent version of Google Chrome, at the moment this only works with Google Chrome Canary.</p>
       <p>Also before you enable microphone input either plug in headphones or turn the volume down if you want to avoid ear splitting feedback!</p>
 
+      Volume: <input type="range" max="1" step="0.1" value="0.8" onchange="changeVolume(this.value)"/>
       <button onclick="startRecording(this);">record</button>
       <button onclick="stopRecording(this);" disabled>stop</button>
       
