@@ -1,7 +1,7 @@
 function WaveTrack()
 {
-    this.sampleRate = 0;        
-    this.audioSequences = [];         
+    this.sampleRate = 0;
+    this.audioSequences = [];
     
     var signedBorders = [0, 0xFF - 0x80, 0xFFFF - 0x8000, 0xFFFFFFFFF - 0x80000000];
     
@@ -25,14 +25,7 @@ function WaveTrack()
     
     this.toBlobUrlAsync = function toBlobUrlAsync(encoding, asyncMethod, host)
     {
-        
-        
         var encodedWave = this.encodeWaveFile();
-        
-        // var bb = new BlobBuilder();
-        // var blob;
-        // bb.append(encodedWave.buffer);
-        // blob = bb.getBlob(encoding);
         blob = new Blob([encodedWave.buffer], {type: encoding});
 
         if (asyncMethod !== undefined)
@@ -40,7 +33,6 @@ function WaveTrack()
             var fileReader = new FileReader();
             fileReader.onloadend = function(e)
             {
-                //debugger;
                 asyncMethod(fileReader.result, host, e);
             };
             fileReader.readAsDataURL(blob);
@@ -56,9 +48,9 @@ function WaveTrack()
         var reader = new BinaryReader(data);
     
         /* Decoding  PCM
-            TODO: Cleanup later with reader.skip(...) function, read only information which is used later         
+            TODO: Cleanup later with reader.skip(...) function, read only information which is used later
         */
-        var waveChunkID = reader.readString(4);                
+        var waveChunkID = reader.readString(4);
         var waveChunkSize = reader.readUInt32();
         var waveFormat = reader.readString(4);
         
@@ -131,14 +123,13 @@ function WaveTrack()
     this.encodeWaveFile = function encodeWaveFile()
     {
         // prepare variables for encoding
-        var waveChunkID = "RIFF";                
+        var waveChunkID = "RIFF";
         var waveFormat = "WAVE";
         var waveSubchunk1ID = "fmt ";
         var waveSubchunk1Size = 16;
         var waveAudioFormat = 1;
         var waveNumChannels = this.audioSequences.length;
         var waveSampleRate = this.sampleRate;
-        var waveBitsPerSample = 16; // Attention! Order
         var waveByteRate = waveSampleRate * waveNumChannels * waveBitsPerSample / 8;
         var waveBlockAlign = waveNumChannels * waveBitsPerSample / 8;
         var waveBitsPerSample = 16;
@@ -146,7 +137,7 @@ function WaveTrack()
         var waveSubchunk2ID = "data";
         var waveSubchunk2Size = waveSamplesPerChannel * waveBlockAlign;
         var waveChunkSize = waveSubchunk2Size + 36; // 36 are the bytes from waveFormat till waveSubchunk2Size
-        var totalSize = waveChunkSize + 8;        
+        var totalSize = waveChunkSize + 8;
             
         // actual writing
         var writer = new BinaryWriter(totalSize);
@@ -173,7 +164,7 @@ function WaveTrack()
         {
             for (var channelId = 0; channelId < waveNumChannels; ++channelId)
             {
-                writer.writeInt16(convertFloatToInt(this.audioSequences[channelId].data[i], waveBitsPerSample, signedBorder));   
+                writer.writeInt16(convertFloatToInt(this.audioSequences[channelId].data[i], waveBitsPerSample, signedBorder));
             }
         }
         

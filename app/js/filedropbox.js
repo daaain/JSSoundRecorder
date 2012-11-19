@@ -1,6 +1,5 @@
 /* Cross Browser Support */
     window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-    window.BlobBuilder = window.WebKitBlobBuilder || window.MozBlobBuilder;
     window.URL = window.URL || window.webkitURL;
     
 /* The FileDropbox prepares a HTMLElement to be a drop container and loads the first dropped file into a array */

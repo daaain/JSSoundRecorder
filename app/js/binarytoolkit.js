@@ -1,8 +1,6 @@
 /* BinaryToolkit written by Rainer Heynke */
 window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-            window.BlobBuilder = window.WebKitBlobBuilder || window.MozBlobBuilder;
-            window.URL = window.URL || window.webkitURL;
-            
+window.URL = window.URL || window.webkitURL;
 
 function BinaryReader(data)
 {
