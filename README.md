@@ -20,7 +20,7 @@ No servers involved, only Web Audio API with binary sound Blobs passed around!
 
 Experimental API to record any system audio input (including USB soundcards, musical instruments, etc).
 
-```
+```javascript
 // shim and create AudioContext
 window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 var audio_context = new AudioContext();
@@ -36,7 +36,7 @@ navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
 
 You can route audio stream around, with input nodes (microphone, synths, etc), filters (volume / gain, equaliser, low pass, etc) and outputs (speakers, binary streams, etc).
 
-```
+```javascript
 function startUserMedia(stream) {
   // create MediaStreamSource and GainNode
   var input = audio_context.createMediaStreamSource(stream);
@@ -58,7 +58,7 @@ Processing (interleaving) record buffer is done in the background to not block t
 
 Also WAV conversion for export is also quite heavy for longer recordings, so best left to run in the background.
 
-```
+```javascript
 this.context = input.context;
 this.node = this.context.createScriptProcessor(4096, 2, 2);
 this.node.onaudioprocess = function(e){
@@ -72,7 +72,7 @@ this.node.onaudioprocess = function(e){
 }
 ```
 
-```
+```javascript
 function record(inputBuffer){
   var bufferL = inputBuffer[0];
   var bufferR = inputBuffer[1];
@@ -97,7 +97,7 @@ function interleave(inputL, inputR){
 }
 ```
 
-```
+```javascript
 function encodeWAV(samples){
   var buffer = new ArrayBuffer(44 + samples.length * 2);
   var view = new DataView(buffer);
@@ -141,7 +141,7 @@ Instead of file drag and drop interface this binary blob is passed to editor.
 
 Note: BlobBuilder deprecated (but a lot of examples use it), you should use Blob constructor instead!
 
-```
+```javascript
 var f = new FileReader();
 f.onload = function(e) {
   audio_context.decodeAudioData(e.target.result, function(buffer) {
@@ -153,7 +153,7 @@ f.onload = function(e) {
 f.readAsArrayBuffer(blob);
 ```
 
-```
+```javascript
 function exportWAV(type){
   var buffer = mergeBuffers(recBuffers, recLength);
   var dataview = encodeWAV(buffer);
@@ -167,7 +167,7 @@ function exportWAV(type){
 
 You can create file download link pointing to WAV blob, but also set it as the source of an Audio element.
 
-```
+```javascript
 var url = URL.createObjectURL(blob);
 var audioElement = document.createElement('audio');
 var downloadAnchor = document.createElement('a');
@@ -191,6 +191,7 @@ Credits / license
 -----------------
 
 Live recording code adapted from: http://www.phpied.com/files/webaudio/record.html
+
 Editor code adapted from: https://github.com/plucked/html5-audio-editor
 
 Copyright (c) 2012 Daniel Demmel
