@@ -108,18 +108,18 @@ function handleWAV(blob) {
 window.onload = function init() {
   try {
     // webkit shim
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-    window.URL = window.URL || window.webkitURL;
+    window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    window.URL = window.URL || window.webkitURL || window.mozURL;
     
     audio_context = new AudioContext();
     console.log('Audio context set up.');
     console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
   } catch (e) {
-    alert('No web audio support in this browser!');
+    console.warn('No web audio support in this browser!');
   }
   
   navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
-    console.log('No live audio input: ' + e);
+    console.warn('No live audio input: ' + e);
   });
 };
