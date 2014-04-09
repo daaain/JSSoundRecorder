@@ -130,9 +130,9 @@ function WaveTrack()
         var waveAudioFormat = 1;
         var waveNumChannels = this.audioSequences.length;
         var waveSampleRate = this.sampleRate;
+        var waveBitsPerSample = 16;
         var waveByteRate = waveSampleRate * waveNumChannels * waveBitsPerSample / 8;
         var waveBlockAlign = waveNumChannels * waveBitsPerSample / 8;
-        var waveBitsPerSample = 16;
         var waveSamplesPerChannel = this.audioSequences[0].data.length;
         var waveSubchunk2ID = "data";
         var waveSubchunk2Size = waveSamplesPerChannel * waveBlockAlign;
