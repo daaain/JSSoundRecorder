@@ -1,7 +1,7 @@
-var context = new webkitAudioContext();
+var context = new AudioContext();
 
 //connect gain
-var dronegain = context.createGainNode();
+var dronegain = context.createGain();
 dronegain.gain.value = 0;
 dronegain.connect(context.destination);
 var recorder = new Recorder(dronegain);
@@ -25,7 +25,7 @@ function createNoiseGen(freq) {
   filter.Q.value = 150;
   filter.connect(panner);
 
-  var noiseSource = context.createJavaScriptNode(bufferLen, 1, 2);
+  var noiseSource = context.createScriptProcessor(bufferLen, 1, 2);
   noiseSource.onaudioprocess = function (e) {
     var outBufferL = e.outputBuffer.getChannelData(0);
     var outBufferR = e.outputBuffer.getChannelData(1);

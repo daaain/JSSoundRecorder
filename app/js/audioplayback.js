@@ -205,17 +205,17 @@ function AudioPlayback()
     {
         for(var i = 0; i < this.updateListener.length; ++i)
         {
-            this.updateListener[i].audioPlaybackUpdate();   
+            this.updateListener[i].audioPlaybackUpdate();
         }
     };
     
     // Creation of a new audio context
     this.audioBufferSize = 1024;
     this.sampleRate = 0;
-    this.audioContext = new webkitAudioContext();
+    this.audioContext = new AudioContext();
 
     // The JavaScriptNode is used to modifiy the output buffer    
-    this.javaScriptNode = this.audioContext.createJavaScriptNode(this.audioBufferSize, 1, 2);
+    this.javaScriptNode = this.audioContext.createScriptProcessor(this.audioBufferSize, 1, 2);
     this.javaScriptNode.onaudioprocess = this.onAudioUpdate;
     this.javaScriptNode.eventHost = this;
     
