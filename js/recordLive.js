@@ -8,7 +8,7 @@ function startUserMedia(stream) {
   var input = audio_context.createMediaStreamSource(stream);
   console.log('Media stream created.');
 
-  volume = audio_context.createGainNode();
+  volume = audio_context.createGain();
   volume.gain.value = volumeLevel;
   input.connect(volume);
   volume.connect(audio_context.destination);

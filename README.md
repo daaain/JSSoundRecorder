@@ -40,7 +40,7 @@ You can route audio stream around, with input nodes (microphone, synths, etc), f
 function startUserMedia(stream) {
   // create MediaStreamSource and GainNode
   var input = audio_context.createMediaStreamSource(stream);
-  var volume = audio_context.createGainNode();
+  var volume = audio_context.createGain();
   volume.gain.value = 0.7;
 
   // connect them and pipe output
