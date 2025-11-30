@@ -1,6 +1,5 @@
 /* BinaryToolkit written by Rainer Heynke */
-window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-window.URL = window.URL || window.webkitURL;
+/* Note: requestFileSystem is deprecated and not used in this file */
 
 function BinaryReader(data)
 {

@@ -96,30 +96,28 @@ function handleWAV(blob) {
   newCell = newRow.insertCell(-1);
   newCell.appendChild(editButton);
 
-  newCell = newRow.insertCell(-1);
-  var toggler;
-  for (var i = 0, l = 8; i < l; i++) {
-    toggler = document.createElement('input');
-    $(toggler).attr('type', 'checkbox');
+  for (var i = 0; i < 8; i++) {
+    newCell = newRow.insertCell(-1);
+    var toggler = document.createElement('input');
+    toggler.type = 'checkbox';
     newCell.appendChild(toggler);
   }
 }
 
-window.onload = function init() {
+window.onload = async function init() {
   try {
-    // webkit shim
-    window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-    window.URL = window.URL || window.webkitURL || window.mozURL;
-    
     audio_context = new AudioContext();
     console.log('Audio context set up.');
-    console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+    console.log('getUserMedia ' + (navigator.mediaDevices?.getUserMedia ? 'available.' : 'not present!'));
   } catch (e) {
     console.warn('No web audio support in this browser!');
+    return;
   }
-  
-  navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    startUserMedia(stream);
+  } catch (e) {
     console.warn('No live audio input: ' + e);
-  });
+  }
 };

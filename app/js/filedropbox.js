@@ -1,6 +1,4 @@
-/* Cross Browser Support */
-    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-    window.URL = window.URL || window.webkitURL;
+/* Note: requestFileSystem is deprecated and not used in this file */
     
 /* The FileDropbox prepares a HTMLElement to be a drop container and loads the first dropped file into a array */
 function FileDropbox()

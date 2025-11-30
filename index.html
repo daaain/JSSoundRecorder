@@ -14,8 +14,17 @@
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
-      .soundBite input {
-        margin-right: 4px;
+      .beat-number {
+        text-align: center;
+        font-size: 11px;
+        color: #666;
+      }
+      .current-beat {
+        outline: 2px solid #0088cc;
+        outline-offset: 1px;
+      }
+      .current-beat-column {
+        background-color: #e6f3ff;
       }
     </style>
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
@@ -37,11 +46,10 @@
       </div>
     </div>
     <div class="recorder container">
-      <p>Make sure you are using a recent version of Google Chrome, at the moment this only works with Google Chrome Canary. You also need to enable Web Audio Input under about:flags.</p>
+      <p>Works in modern browsers with Web Audio API and microphone access support.</p>
       <p>There are no servers involved, only Web Audio API and WAVs are passed around as binary Blobs.</p>
       <p>Make sure you try editing a sound, there's a fairly full featured editor tied in (thanks plucked/html5-audio-editor).</p>
-      <p>Also before you enable microphone input either plug in headphones or turn the volume down if you want to avoid ear splitting feedback, especially while playing back already recorded sounds!</p>
-      <p>Finally be warned that HTML5 playback sound volume is set to maximum by default, so make sure turn it down!</p>
+      <p><strong>Important:</strong> Before enabling microphone input, plug in headphones or turn the volume down to avoid feedback, especially while playing back recorded sounds!</p>
       <p>Code: <a href="https://github.com/daaain/JSSoundRecorder">https://github.com/daaain/JSSoundRecorder</a></p>
 
       <h2>Record</h2>
@@ -62,33 +70,32 @@
           <th>Sound</th>
           <th></th>
           <th></th>
-          <th id="sequencerBoxes">
-            <!-- <p>Sequence</p> -->
-            <input type="checkbox"/>
-            <input type="checkbox"/>
-            <input type="checkbox"/>
-            <input type="checkbox"/>
-            <input type="checkbox"/>
-            <input type="checkbox"/>
-            <input type="checkbox"/>
-            <input type="checkbox"/>
-          </th>
-        </tr>
-        <tr>
-          <th>Drone</th>
-          <th>
-            <label for='BaseNote'>Base Note: <span class='controlVal'></span></label>
-            <input class='control' id='BaseNote' type='range' min='40' max='100' value='63'>
-          </th>
-          <th>
-            <label for='NumOsc'>Number of Generators: <span class='controlVal'></span></label>
-            <input class='control' id='NumOsc' type='range' min='1' max='40' value='40'>
-          </th>
-          <th>
-            <!-- <input type="checkbox" id="droneToggle" checked/> -->
-          </th>
+          <th class="beat-number">1</th>
+          <th class="beat-number">2</th>
+          <th class="beat-number">3</th>
+          <th class="beat-number">4</th>
+          <th class="beat-number">5</th>
+          <th class="beat-number">6</th>
+          <th class="beat-number">7</th>
+          <th class="beat-number">8</th>
         </tr>
       </table>
+
+      <h2>Drone</h2>
+      <p>
+        <label>
+          <input type="checkbox" id="droneToggle" checked/>
+          Enable drone (plays with sequencer)
+        </label>
+      </p>
+      <p>
+        <label for='BaseNote'>Base Note: <span class='controlVal'></span></label>
+        <input class='control' id='BaseNote' type='range' min='40' max='100' value='63'>
+      </p>
+      <p>
+        <label for='NumOsc'>Number of Generators: <span class='controlVal'></span></label>
+        <input class='control' id='NumOsc' type='range' min='1' max='40' value='40'>
+      </p>
     </div>
     <div class="editor container">
       <div class="row">

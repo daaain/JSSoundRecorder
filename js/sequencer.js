@@ -6,12 +6,22 @@ var Sequencer = {
   beatCount: 0,
 
   _beat: function _beat() {
-    $('#sequencerBoxes input:checkbox').removeAttr('checked');
-    $('#sequencerBoxes input:checkbox').eq(this.beatCount).attr('checked','checked');
+    // Clear previous beat highlight
+    $('#recordingslist th, #recordingslist td').removeClass('current-beat-column');
+    $('#recordingslist input:checkbox').removeClass('current-beat');
+
+    // Highlight current beat column (beatCount 0-7 maps to column 3-10)
+    var colIndex = this.beatCount + 3;
+    $('#recordingslist tr').each(function() {
+      $(this).children().eq(colIndex).addClass('current-beat-column');
+    });
+    $('#recordingslist td:nth-child(' + (colIndex + 1) + ') input:checkbox').addClass('current-beat');
     
     for (var i = 0, l = this.sounds.length; i < l; i++) {
       if($(this.sounds[i]).find('input[type=checkbox]').eq(this.beatCount).is(":checked")) {
-        $(this.sounds[i]).find('audio').get(0).play();
+        var audio = $(this.sounds[i]).find('audio').get(0);
+        audio.currentTime = 0;
+        audio.play();
       }
     }
 
@@ -26,6 +36,8 @@ var Sequencer = {
   },
   _stop: function _stop() {
     clearTimeout(Sequencer.timer);
+    $('#recordingslist th, #recordingslist td').removeClass('current-beat-column');
+    $('#recordingslist input:checkbox').removeClass('current-beat');
   },
   _reset: function _getSounds() {
     this.sounds = $('.soundBite');
@@ -40,7 +52,11 @@ function startSequencer(button) {
   console.log('Playing...');
 
   volume.gain.value = 0;
-  dronegain.gain.value = 10.0;
+  if ($('#droneToggle').is(':checked')) {
+    // Resume the drone's AudioContext (may be suspended until user interaction)
+    context.resume();
+    dronegain.gain.value = 10.0;
+  }
   Sequencer._reset();
   Sequencer._play();
 }

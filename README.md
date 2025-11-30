@@ -1,5 +1,6 @@
-JSSoundRecorder
-===============
+# JSSoundRecorder
+
+Update 2025/11/30: after more than a decade, I decided to update the app and make it work again with current browsers! Also updated the outdated snippets below, but left the rest mostly the same.
 
 Record sounds / noises around you and turn them into music.
 
@@ -7,10 +8,9 @@ It’s a work in progress, at the moment it enables you to record live audio str
 
 There's also a sequencer part where you can create small loops using these sounds with a drone synth overlaid on them.
 
-See it working: http://daaain.github.com/JSSoundRecorder
+See it working: <https://daaain.github.io/JSSoundRecorder>
 
-Technology
-----------
+## Technology
 
 No servers involved, only Web Audio API with binary sound Blobs passed around!
 
@@ -21,15 +21,11 @@ No servers involved, only Web Audio API with binary sound Blobs passed around!
 Experimental API to record any system audio input (including USB soundcards, musical instruments, etc).
 
 ```javascript
-// shim and create AudioContext
-window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
+// create AudioContext and request microphone access
 var audio_context = new AudioContext();
 
-// shim and start GetUserMedia audio stream
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
-  console.log('No live audio input: ' + e);
-});
+const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+startUserMedia(stream);
 ```
 
 #### Audio nodes for routing
@@ -52,24 +48,27 @@ function startUserMedia(stream) {
 }
 ```
 
-### WebWorker
+### AudioWorklet + WebWorker
 
-Processing (interleaving) record buffer is done in the background to not block the main thread and the UI.
-
-Also WAV conversion for export is also quite heavy for longer recordings, so best left to run in the background.
+Audio capture uses AudioWorklet (runs on the audio rendering thread for glitch-free recording), while heavy processing (interleaving, WAV encoding) is done in a WebWorker to not block the main thread.
 
 ```javascript
-this.context = input.context;
-this.node = this.context.createScriptProcessor(4096, 2, 2);
-this.node.onaudioprocess = function(e){
-  worker.postMessage({
-   command: 'record',
-   buffer: [
-     e.inputBuffer.getChannelData(0),
-     e.inputBuffer.getChannelData(1)
-   ]
-  });
-}
+// Register AudioWorklet for capturing audio
+this.context.audioWorklet.addModule('js/lib/recorder-worklet.js').then(function() {
+  self.node = new AudioWorkletNode(self.context, 'recorder-worklet');
+
+  // Forward audio data from worklet to worker for processing
+  self.node.port.onmessage = function(e) {
+    if (e.data.command === 'audioData') {
+      worker.postMessage({
+        command: 'record',
+        buffer: e.data.buffer
+      });
+    }
+  };
+
+  source.connect(self.node);
+});
 ```
 
 ```javascript
@@ -178,8 +177,7 @@ audioElement.src = url;
 downloadAnchor.href = url;
 ```
 
-TODO
-----
+### TODO
 
 * Sequencer top / status row should be radio buttons :)
 * Code cleanup / restructuring
@@ -187,32 +185,8 @@ TODO
 * Visual feedback (levels) for live recording
 * Sequencer UI (and separation to a different module)
 
-Credits / license
------------------
+### Credits
 
-Live recording code adapted from: http://www.phpied.com/files/webaudio/record.html
+Live recording code adapted from: <http://www.phpied.com/files/webaudio/record.html>
 
-Editor code adapted from: https://github.com/plucked/html5-audio-editor
-
-Copyright (c) 2012 Daniel Demmel
-
-MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Editor code adapted from: <https://github.com/plucked/html5-audio-editor>

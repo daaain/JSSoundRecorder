@@ -7,9 +7,14 @@ dronegain.connect(context.destination);
 var recorder = new Recorder(dronegain);
 
 var noiseNodes = [];
-var bufferLen = 4096;
+var workletLoaded = false;
 
 function createNoiseGen(freq) {
+  if (!workletLoaded) {
+    console.warn('Worklet not loaded yet');
+    return;
+  }
+
   var panner = context.createPanner();
   var max = 20;
   var min = -20;
@@ -20,19 +25,17 @@ function createNoiseGen(freq) {
   panner.connect(dronegain);
 
   var filter = context.createBiquadFilter();
-  filter.type = filter.BANDPASS;
+  filter.type = 'bandpass';  // Modern string-based type instead of deprecated constant
   filter.frequency.value = freq;
   filter.Q.value = 150;
   filter.connect(panner);
 
-  var noiseSource = context.createScriptProcessor(bufferLen, 1, 2);
-  noiseSource.onaudioprocess = function (e) {
-    var outBufferL = e.outputBuffer.getChannelData(0);
-    var outBufferR = e.outputBuffer.getChannelData(1);
-    for (var i = 0; i < bufferLen; i++) {
-      outBufferL[i] = outBufferR[i] = Math.random() * 2 - 1;
-    }
-  };
+  // Create noise source using AudioWorklet
+  var noiseSource = new AudioWorkletNode(context, 'noise-worklet', {
+    numberOfInputs: 0,
+    numberOfOutputs: 1,
+    outputChannelCount: [2]
+  });
   noiseSource.connect(filter);
   noiseNodes.push(noiseSource);
 
@@ -123,7 +126,16 @@ function setUpAnimateFallback(){
 
 $(window).load(function(){
   //setUpAnimateFallback();
-  generate();
-  bindEvents();
+
+  // Load the noise worklet, then initialise drone
+  context.audioWorklet.addModule('js/noise-worklet.js').then(function() {
+    workletLoaded = true;
+    console.log('Noise worklet loaded');
+    generate();
+    bindEvents();
+  }).catch(function(error) {
+    console.error('Failed to load noise worklet:', error);
+  });
+
   //showIntro();
 });
